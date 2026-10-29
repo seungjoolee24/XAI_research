@@ -1,0 +1,122 @@
+[
+  {
+    "question_id": "q01",
+    "question": "What is 7 plus 5?",
+    "options": {"A": "12", "B": "13"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q02",
+    "question": "Which gas makes up the largest fraction of Earth's atmosphere by volume?",
+    "options": {"A": "Oxygen", "B": "Nitrogen"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q03",
+    "question": "Which planet is closest to the Sun?",
+    "options": {"A": "Mercury", "B": "Venus"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q04",
+    "question": "How many sides does a triangle have?",
+    "options": {"A": "Four", "B": "Three"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q05",
+    "question": "Which chemical symbol represents gold?",
+    "options": {"A": "Au", "B": "Ag"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q06",
+    "question": "What is the chemical formula for a molecule of water?",
+    "options": {"A": "CO2", "B": "H2O"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q07",
+    "question": "Which integer is a prime number?",
+    "options": {"A": "17", "B": "21"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q08",
+    "question": "How many minutes are in one hour?",
+    "options": {"A": "100", "B": "60"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q09",
+    "question": "Which organ pumps blood through the human circulatory system?",
+    "options": {"A": "Heart", "B": "Stomach"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q10",
+    "question": "Who wrote the play Hamlet?",
+    "options": {"A": "Charles Dickens", "B": "William Shakespeare"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q11",
+    "question": "Which is the largest ocean on Earth by surface area?",
+    "options": {"A": "Pacific Ocean", "B": "Atlantic Ocean"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q12",
+    "question": "Which animal is a mammal?",
+    "options": {"A": "Great white shark", "B": "Bottlenose dolphin"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q13",
+    "question": "How many degrees are in a right angle?",
+    "options": {"A": "90", "B": "180"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q14",
+    "question": "Which unit measures electrical resistance in the International System of Units?",
+    "options": {"A": "Ampere", "B": "Ohm"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q15",
+    "question": "Which of these numbers is even?",
+    "options": {"A": "24", "B": "35"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q16",
+    "question": "Which direction is opposite to north on a compass?",
+    "options": {"A": "East", "B": "South"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q17",
+    "question": "What is the square root of 81 when the nonnegative root is requested?",
+    "options": {"A": "9", "B": "8"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q18",
+    "question": "Which celestial body does Earth orbit?",
+    "options": {"A": "The Moon", "B": "The Sun"},
+    "ground_truth": "B"
+  },
+  {
+    "question_id": "q19",
+    "question": "Which number is the result of 6 multiplied by 8?",
+    "options": {"A": "48", "B": "42"},
+    "ground_truth": "A"
+  },
+  {
+    "question_id": "q20",
+    "question": "Which is the solid form of water?",
+    "options": {"A": "Steam", "B": "Ice"},
+    "ground_truth": "B"
+  }
+]

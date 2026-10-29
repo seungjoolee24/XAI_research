@@ -1,0 +1,21 @@
+# Paths resolve against this config file's directory, not the current directory.
+seed: 42
+model:
+  name: Qwen/Qwen3-4B-Instruct-2507
+  revision: cdbee75f17c01a7cc42f958dc650907174af0554
+  device: auto   # Requires CUDA; explicitly choose cpu for small-model testing.
+  dtype: auto    # CUDA BF16 if supported, otherwise FP16; CPU FP32.
+  max_input_tokens: 512
+  max_new_tokens: 8
+  attention_implementation: sdpa
+dataset:
+  path: ../data/baseline_questions.json
+  include_swapped: false
+experiment:
+  conditions: [neutral, false_opinion, correct_opinion]
+  limit: null
+hidden_states:
+  question_limit: 3
+  conditions: [false_opinion, correct_opinion]
+output:
+  directory: ../outputs
