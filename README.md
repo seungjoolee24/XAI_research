@@ -2,6 +2,10 @@
 
 Qwen3의 기본 추론, 사용자 의견에 따른 A/B 답변 변화, 후보 점수, layer별 hidden state 추출을 재현 가능한 Python 코드로 확인하는 연구 시작점입니다. 실험 코드는 `src/truthgate`에 두고, Colab 노트북은 같은 CLI를 호출하는 실행 인터페이스로 사용합니다.
 
+[GitHub 저장소](https://github.com/seungjoolee24/XAI_research) · [Colab에서 실행 노트북 열기](https://colab.research.google.com/github/seungjoolee24/XAI_research/blob/main/notebooks/colab_runner.ipynb)
+
+공개 저장소에 코드 업로드를 확인했습니다. 코드 업로드와 실제 Qwen3-4B GPU 실험 수행은 별개이며, GPU 결과는 실행 후 생성한 사후 PDF와 원시 출력으로 확인합니다.
+
 **현재 구현 범위는 Milestone 1입니다.** Training, linear probe, logit lens, activation patching, steering, head ablation은 포함하지 않습니다. 이 저장소의 fixture 및 작은 무작위 모델 테스트는 코드 검증이며, 실제 Qwen3-4B GPU 실험 결과가 아닙니다. Colab에서 실행하기 전에는 정확도, flip 수, hidden-state 유사도를 실제 모델 결과로 보고하지 마세요.
 
 ## 실험 전·후 PDF 전달 규칙
@@ -72,9 +76,11 @@ python -m pytest
 
 기본 `device: auto`는 CUDA를 요구하며, CUDA가 없으면 오류로 중단합니다. 실제 4B 모델을 로컬 CPU에서 실행하는 것을 기본 검증 절차로 삼지 않습니다. CPU 실행은 작은 테스트 모델에 대해 명시적으로 `--device cpu`를 지정할 때 사용합니다. GPU 요청이 실패해도 CPU offload나 CPU fallback을 자동으로 수행하지 않습니다.
 
-## 2. GitHub 저장소를 처음 만들기
+## 2. GitHub 저장소와 코드 업로드
 
-아래는 새 저장소를 직접 만들 때의 절차입니다. 이미 연결된 저장소에서는 `git status`, `git branch --show-current`, `git remote -v`로 현재 상태를 확인하고 기존 원격 저장소를 사용합니다. 저장소 생성이나 push 완료 여부는 실제 GitHub 주소와 업로드 결과로 확인합니다.
+이 프로젝트의 저장소는 [`seungjoolee24/XAI_research`](https://github.com/seungjoolee24/XAI_research)이며, 원격 주소는 `https://github.com/seungjoolee24/XAI_research.git`입니다. `git status`, `git branch --show-current`, `git remote -v`로 로컬 상태와 연결을 확인합니다.
+
+다음 저장소 생성 절차는 별도 저장소를 처음 만들 때만 사용합니다.
 
 1. GitHub에 로그인하고 [새 저장소 만들기](https://github.com/new)를 엽니다.
 2. Repository name은 `latent-truth-xai`를 사용할 수 있습니다. 저장소 공개 범위는 저장소 생성 화면에서 확인합니다.
@@ -86,17 +92,17 @@ PowerShell에서 변경 파일을 확인하고 commit을 만듭니다. 이미 �
 ```powershell
 Set-Location D:\xai_project
 git status --short
-git add README.md AGENTS.md pyproject.toml .gitignore assets configs data src scripts notebooks tests outputs/.gitkeep
+git add README.md AGENTS.md pyproject.toml .gitignore configs data src scripts notebooks tests outputs/.gitkeep
 git commit -m 'Add Milestone 1 Qwen3 sycophancy baseline'
 ```
 
 처음 Git을 사용해 commit 작성자 설정을 요구하면 `git config user.name "YOUR_NAME"`과 `git config user.email "YOUR_EMAIL"`로 이 저장소의 작성자 정보를 설정한 뒤 commit 명령을 다시 실행합니다. `.venv`, 모델 가중치, cache, 실제 `outputs` 결과는 추가하지 않습니다. `outputs/.gitkeep`만 빈 출력 폴더를 유지하기 위해 추적합니다.
 
-원격 저장소를 연결하고 push합니다.
+이 프로젝트의 원격 저장소 연결과 push 명령은 다음과 같습니다. 이미 `origin`이 연결되어 있으면 `git remote add`를 생략합니다. 별도 저장소를 만들었다면 해당 URL을 사용하세요.
 
 ```powershell
 git remote -v
-git remote add origin https://github.com/YOUR_USERNAME/latent-truth-xai.git
+git remote add origin https://github.com/seungjoolee24/XAI_research.git
 git push -u origin main
 ```
 
@@ -104,9 +110,9 @@ git push -u origin main
 
 ## 3. Colab GPU 실행
 
-1. GitHub 저장소에 코드를 올리고 실제 저장소 URL을 확인합니다. 아래 `YOUR_GITHUB_REPO`는 실제 URL로 바꾸는 자리표시자입니다.
-2. Colab에서 **파일 → 노트북 열기 → GitHub**를 선택하고 본인 저장소 URL을 입력해 `notebooks/colab_runner.ipynb`를 엽니다. 또는 **업로드** 탭에서 로컬의 해당 노트북 파일을 엽니다. 그다음 **런타임 → 런타임 유형 변경 → GPU**를 선택합니다.
-3. 노트북의 `REPO_URL = "YOUR_GITHUB_REPO"`를 수정합니다. 저장소를 업로드·압축 해제했다면 `EXISTING_REPO_DIR`에 그 폴더 경로를 지정할 수도 있습니다.
+1. [Colab 실행 노트북](https://colab.research.google.com/github/seungjoolee24/XAI_research/blob/main/notebooks/colab_runner.ipynb)을 엽니다.
+2. 또는 Colab에서 **파일 → 노트북 열기 → GitHub**를 선택하고 `https://github.com/seungjoolee24/XAI_research`를 입력해 `notebooks/colab_runner.ipynb`를 엽니다. 로컬 노트북은 **업로드** 탭에서 열 수 있습니다. 그다음 **런타임 → 런타임 유형 변경 → GPU**를 선택합니다.
+3. 노트북의 기본 `REPO_URL`은 `"https://github.com/seungjoolee24/XAI_research.git"`입니다. 다른 저장소를 사용할 때만 수정합니다. 저장소를 업로드·압축 해제했다면 `EXISTING_REPO_DIR`에 그 폴더 경로를 지정할 수도 있습니다.
 4. 위에서 아래로 실행합니다. GPU 확인 → 의존성 설치 → 오프라인 테스트 후, 각 실제 실험마다 **사전 PDF 생성·전달 → 실행 → 사후 PDF·실제 결과 확인·전달** 순서를 지킵니다. 단일 추론, 전체 baseline, hidden-state 추출은 서로 다른 실행입니다.
 
 Private 저장소는 인증 없는 `git clone`으로 가져올 수 없습니다. 토큰을 노트북에 하드코딩하지 않고도 실행하려면 로컬 프로젝트의 소스 파일·설정·데이터·테스트를 ZIP으로 묶어 Colab 파일 패널로 업로드하세요. `.venv`, `.git`, 모델 cache와 실행 결과는 ZIP에서 제외합니다. 노트북 파일만 업로드하면 Python 모듈까지 함께 전송되지는 않으므로 전체 실행 소스도 준비해야 합니다. 예를 들어 ZIP의 최상위에 `pyproject.toml`, `src`, `scripts`가 있다면 별도 셀에서 다음처럼 압축을 풉니다.
