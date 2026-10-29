@@ -6,6 +6,35 @@ Qwen3의 기본 추론, 사용자 의견에 따른 A/B 답변 변화, 후보 점
 
 공개 저장소에 코드 업로드를 확인했습니다. 코드 업로드와 실제 Qwen3-4B GPU 실험 수행은 별개이며, GPU 결과는 실행 후 생성한 사후 PDF와 원시 출력으로 확인합니다.
 
+## 확장 A/B 검증: 400문항, 20과목, 2,400회 평가
+
+[확장 실험 Colab 노트북](https://colab.research.google.com/github/seungjoolee24/XAI_research/blob/main/notebooks/colab_expanded_validation.ipynb)은 `configs/expanded.yaml`의 고정 설정으로 실행합니다. 원본 MMLU test의 20개 과목에서 과목당 20문항을 사전 고정하여 STEM 240개, 인문 80개, 사회과학 80개의 원문 400개를 사용합니다. 각 과목은 원래 순서에서 정답 A/B를 10개씩 배치하며, 모든 문항에 선택지 교환본과 neutral/false_opinion/correct_opinion 세 조건을 적용해 2,400개 프롬프트를 평가합니다.
+
+각 원문 4지선다에서 정답과 해시 규칙으로 고른 오답 1개만 남깁니다. 문항·오답·초기 정답 위치는 평가 모델을 호출하지 않는 결정적 규칙으로 선택합니다. **이는 MMLU의 2지선다 변환이며 원본 MMLU 점수가 아닙니다.** 원본 revision, 문항 index, 원래 선택지와 정답, 변환 규칙, 제외 사유 및 파일 SHA256은 `data/expanded_questions.json`과 `data/expanded_dataset_manifest.json`에 보존합니다. 데이터셋 MIT 원문 라이선스와 저작권 표시도 manifest에 포함합니다.
+
+저장소 루트에서 새 실행 폴더를 만들고 사전 설명서를 생성합니다. 이 단계에서는 모델 추론이 시작되지 않습니다.
+
+```bash
+python scripts/run_validation.py --config configs/expanded.yaml --run-dir outputs/expanded_RUN_ID --prepare
+```
+
+생성된 `validation_pre_experiment.pdf`를 열어 사용자에게 전달한 다음, 같은 실행 폴더에서 추론을 시작합니다. `--pre-report-delivered`는 실제로 사용자에게 PDF를 제공한 뒤에만 지정합니다.
+
+```bash
+python scripts/run_validation.py --config configs/expanded.yaml --run-dir outputs/expanded_RUN_ID --execute --pre-report-delivered
+```
+
+실행은 각 프롬프트의 원시 출력을 저장하며, 중단한 실행은 동일한 데이터·소스·설정·사전 PDF를 유지한 상태에서 위 실행 명령에 `--resume`을 추가해 재개합니다. fingerprint가 달라지면 재개를 거부하므로 변경된 실험에는 새 사전 설명서와 실행 폴더가 필요합니다. 전체 프롬프트 길이를 첫 forward 전에 확인하며, 1,024 token 초과를 묵시적으로 잘라내지 않습니다. CUDA 요청 실패 시 CPU로 자동 전환하지 않습니다.
+
+완료 후 사후 PDF와 `validation_summary.json`, 조건·과목·분야별 CSV, 선택지 순서 일관성 CSV, 문항별 paired 결과와 원시 JSONL/CSV를 함께 보관합니다. 중단·실패 보고서에는 완료 행 수와 오류를 명시하고 미관측 결과를 채우지 않습니다.
+
+- strict A/B 생성 정확도·invalid 수와 후보 winner 정확도를 구분하고, 사전 고정한 보조 내용 판정을 별도로 보고합니다.
+- 정답 방향 점수의 중립 대비 paired 변화, harmful/beneficial flip, candidate-only 변화와 선택지 교환 후 내용 일관성을 측정합니다.
+- 후보 정규화 확률과 전체 vocabulary 기준 확률, A+B next-token 질량을 구분합니다. 후보 확률을 보정된 사실 신뢰도로 해석하지 않습니다.
+- 신뢰구간은 원문 question_id 단위로 두 순서와 모든 조건을 묶은 2,000회 cluster bootstrap(seed 42)의 95% 구간입니다. 2,400행을 독립 문항 2,400개로 세지 않습니다.
+
+질문 수와 분야를 늘리는 것은 측정의 안정성을 점검하기 위한 절차입니다. 라벨 따라 하기와 내용에 대한 동조, 실제 내부 지식, 인과 메커니즘을 이 실험만으로 구분하거나 입증할 수는 없습니다. 과목 이름 기반의 교육 단계는 실측 난이도나 검증된 추론 유형을 뜻하지 않습니다.
+
 **현재 구현 범위는 Milestone 1입니다.** Training, linear probe, logit lens, activation patching, steering, head ablation은 포함하지 않습니다. 이 저장소의 fixture 및 작은 무작위 모델 테스트는 코드 검증이며, 실제 Qwen3-4B GPU 실험 결과가 아닙니다. Colab에서 실행하기 전에는 정확도, flip 수, hidden-state 유사도를 실제 모델 결과로 보고하지 마세요.
 
 ## 실험 전·후 PDF 전달 규칙

@@ -1,0 +1,22 @@
+# Binary projection of 400 MMLU test items; see data/expanded_dataset_manifest.json.
+# 400 source items x 2 option orders x 3 conditions = 2400 prompt rows.
+seed: 42
+model:
+  name: Qwen/Qwen3-4B-Instruct-2507
+  revision: cdbee75f17c01a7cc42f958dc650907174af0554
+  device: auto
+  dtype: auto
+  max_input_tokens: 1024
+  max_new_tokens: 8
+  attention_implementation: sdpa
+dataset:
+  path: ../data/expanded_questions.json
+  include_swapped: true
+experiment:
+  conditions: [neutral, false_opinion, correct_opinion]
+  limit: null
+hidden_states:
+  question_limit: 3
+  conditions: [false_opinion, correct_opinion]
+output:
+  directory: ../outputs
