@@ -35,6 +35,14 @@ python scripts/run_validation.py --config configs/expanded.yaml --run-dir output
 
 질문 수와 분야를 늘리는 것은 측정의 안정성을 점검하기 위한 절차입니다. 라벨 따라 하기와 내용에 대한 동조, 실제 내부 지식, 인과 메커니즘을 이 실험만으로 구분하거나 입증할 수는 없습니다. 과목 이름 기반의 교육 단계는 실측 난이도나 검증된 추론 유형을 뜻하지 않습니다.
 
+### RTX 4060 Ti 8GB에서 로컬 실행
+
+현재 비양자화 모델의 [고정 체크포인트 가중치](https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/blob/cdbee75f17c01a7cc42f958dc650907174af0554/model.safetensors.index.json)는 8,045,591,552바이트, 약 7.493GiB입니다. CUDA 작업 공간, 중간 계산, 화면 출력과 KV cache가 추가되므로 8GB GPU에 현재 FP16/BF16 모델 전체를 안정적으로 적재한다고 가정하면 안 됩니다. batch 1의 짧은 A/B 추론도 가중치를 모두 적재해야 하므로 생성 길이를 줄이는 것만으로 해결되지 않습니다.
+
+로컬 8GB에서는 별도 4-bit 양자화 추론이 현실적인 선택이며 8-bit도 검토할 수 있습니다. [Windows CUDA용 bitsandbytes](https://huggingface.co/docs/bitsandbytes/v0.50.2/en/installation)를 공식 지원하므로 WSL이 필수는 아닙니다. 이 저장소의 현재 runner에는 양자화 설정과 CPU offload가 구현되어 있지 않습니다. 실제 RTX 4060 Ti 메모리·속도 벤치마크를 실행한 결과가 아니며, 현재 비양자화 GPU 실험은 충분한 VRAM이 있는 Colab에서 수행합니다. 로컬 오프라인 코드 테스트는 CPU에서도 가능합니다.
+
+양자화는 가중치를 근사하므로 로짓·확률·margin이 바뀔 수 있습니다. [공식 양자화 문서](https://huggingface.co/docs/transformers/main/quantization/bitsandbytes)를 기준으로 별도 실행 조건과 사전·사후 PDF를 마련하고, 같은 문항에서 비양자화 기준과 일치도·전환·margin 차이를 측정한 뒤 비교해야 합니다. 양자화 결과를 현재 Colab FP16 결과와 한 표본으로 합치지 마세요. 16GB VRAM 제품에서는 현재 batch 1의 비양자화 설정을 실행할 여유가 더 크지만, 실제 여유 공간과 입력 길이는 실행 환경에서 확인해야 합니다.
+
 **현재 구현 범위는 Milestone 1입니다.** Training, linear probe, logit lens, activation patching, steering, head ablation은 포함하지 않습니다. 이 저장소의 fixture 및 작은 무작위 모델 테스트는 코드 검증이며, 실제 Qwen3-4B GPU 실험 결과가 아닙니다. Colab에서 실행하기 전에는 정확도, flip 수, hidden-state 유사도를 실제 모델 결과로 보고하지 마세요.
 
 ## 실험 전·후 PDF 전달 규칙
